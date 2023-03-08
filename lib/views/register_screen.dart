@@ -114,15 +114,6 @@ class RegisterScreen extends StatelessWidget {
                   listener: (context, state) {
                     if (state is RegisterSuccessState ||
                         state is RegisterErrorState) {
-                          Fluttertoast.showToast(
-        msg: "This is Center Short Toast",
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.CENTER,
-        timeInSecForIosWeb: 1,
-        backgroundColor: Colors.red,
-        textColor: Colors.white,
-        fontSize: 16.0
-    );
                       Fluttertoast.showToast(
                           msg: authCubit.userResponse!.message!,
                           gravity: ToastGravity.BOTTOM);
@@ -132,21 +123,20 @@ class RegisterScreen extends StatelessWidget {
                 ),
                 ElevatedButton(
                   onPressed: () async {
-                    if (_formKey.currentState!.validate() ||
-                        !_formKey.currentState!.validate()) {
+                    if (_formKey.currentState!.validate()) {
                       //TODO::show toster and navigate
                       print("valiiiiiid");
-                      /* User user = User(
+                      User user = User(
                           email: _email.text,
                           phone: _phone.text,
                           name: _Name.text,
-                          password: _password.text); */
+                          password: _password.text);
 
-                      User user = User(
+                      /* User user = User(
                           email: "sohaila@email.com",
                           phone: "01122152211",
                           name: "sohaila",
-                          password: "Mm#123456");
+                          password: "Mm#123456"); */
 
                       print("valiiiiiid222");
                       authCubit.register(user);
