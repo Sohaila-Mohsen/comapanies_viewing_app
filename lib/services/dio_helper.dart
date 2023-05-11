@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/material.dart';
 
 class DioHelper {
   static late Dio dio;
@@ -6,8 +7,7 @@ class DioHelper {
   static init() {
     dio = Dio(
       BaseOptions(
-        baseUrl:
-            "https://student.valuxapps.com/", //----------------------------
+        responseType: ResponseType.plain,
         receiveDataWhenStatusError: true,
       ),
     );
@@ -15,39 +15,32 @@ class DioHelper {
 
   static Future<Response> getData(
       {required String url, Map<String, dynamic>? query, String? token}) async {
-    /*dio.options.headers = {
-      "Content-Type": "application/json",
-    };*/
     if (token != null) dio.options.headers["Authorization"] = "Bearer $token";
-    return await dio.get(
-      url,
-      queryParameters: query,
-    );
+    return await dio.get(url,
+        queryParameters: query,
+        options:
+            Options(receiveTimeout: const Duration(milliseconds: 60 * 100)));
   }
 
   static Future<Response> postData(
       {required String url,
       required Map<String, dynamic> data,
+      //dynamic data,
       Map<String, dynamic>? query,
       String? token}) async {
     /*dio.options.headers = {
       "Content-Type": "application/json",
     };*/
     if (token != null) dio.options.headers["Authorization"] = "Bearer $token";
-    //dio.options.headers["Accept"] = "application/json";
+    debugPrint("before return from dio");
     return await dio
-        .post(url,
-            queryParameters: query,
-            data: data,
-            options: Options(
-                followRedirects: false,
-                validateStatus: (status) {
-                  return status! < 500;
-                },
-                headers: {"Accept": "application/json"},
-                responseType: ResponseType.json))
+        .post(
+      url,
+      queryParameters: query,
+      data: data,
+    )
         .catchError((e) {
-      print("from dio post the folloing erroe arisr : $e \nwith url : $url");
+      debugPrint(e.toString());
     });
   }
 
@@ -59,20 +52,10 @@ class DioHelper {
     if (token != null) dio.options.headers["Authorization"] = "Bearer $token";
     return await dio
         .patch(
-      url,
-      queryParameters: query,
-      data: data,
-    )
-        .catchError((e) {
-      print(e);
-    });
+          url,
+          queryParameters: query,
+          data: data,
+        )
+        .catchError((e) => debugPrint(e));
   }
 }
-
-
-/*
-sara
-sara@email.com
-01122112211
-Mm#123456
-*/ 

@@ -1,8 +1,8 @@
 import 'package:authentication_app/bloc/onboarding_cubit/onboarding_cubit.dart';
-import 'package:authentication_app/views/register_screen.dart';
+import 'package:authentication_app/utils/sp_helper/cache_helper.dart';
+import 'package:authentication_app/views/sign%20in/sign_in.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
 import '../models/onboarding_content.dart';
 
 class OnBoardingScreen extends StatefulWidget {
@@ -19,7 +19,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
     return Scaffold(
       body: Column(
         children: [
-          SizedBox(
+          const SizedBox(
             height: 50,
           ),
           Expanded(
@@ -32,21 +32,21 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                 child: Column(
                   children: [
                     Image.asset(content[index].imagePath),
-                    SizedBox(
+                    const SizedBox(
                       height: 30,
                     ),
                     Text(
                       content[index].title,
-                      style: TextStyle(
+                      style: const TextStyle(
                           fontSize: 25,
                           color: Color.fromARGB(128, 255, 193, 7)),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 30,
                     ),
                     Text(
                       content[index].description,
-                      style: TextStyle(wordSpacing: 6),
+                      style: const TextStyle(wordSpacing: 6),
                     )
                   ],
                 ),
@@ -61,28 +61,30 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                 children: List.generate(
                     content.length,
                     (index) => Container(
-                          margin: EdgeInsets.all(3),
+                          margin: const EdgeInsets.all(3),
                           height: 10,
                           width: pageCubit.pageIndex == index ? 20 : 10,
                           decoration: BoxDecoration(
                               color: pageCubit.pageIndex == index
                                   ? Theme.of(context).primaryColor
-                                  : Color.fromARGB(83, 210, 210, 210),
+                                  : const Color.fromARGB(83, 210, 210, 210),
                               borderRadius:
-                                  BorderRadius.all(Radius.circular(20))),
+                                  const BorderRadius.all(Radius.circular(20))),
                         )),
               );
             },
           ),
           ElevatedButton(
             onPressed: () {
+              SharedPreferencesHelper.saveData(key: "isFirst", value: true);
               Navigator.push(
-                context, MaterialPageRoute(builder: (context) => RegisterScreen()),
+                context,
+                MaterialPageRoute(builder: (context) => SignInScreen()),
               );
             },
-            child: Text("     Start      "),
+            child: const Text("     Start      "),
           ),
-          SizedBox(
+          const SizedBox(
             height: 50,
           )
         ],

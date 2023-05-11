@@ -6,7 +6,7 @@ import 'services/dio_helper.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
- // await SharedPreferencesHelper.init();
+  await SharedPreferencesHelper.init();
   DioHelper.init();
   runApp(AppRoot());
 }
