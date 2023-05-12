@@ -28,8 +28,6 @@ class EditProfileCubit extends Cubit<EditProfileState> {
     imageFile = pickedFile;
   }
 
- 
-
   Future<void> editProfile(Company company) async {
     Map<String, dynamic> map = company.toJson();
     print("mapppp: $map , image = ${company.image!.path}");
@@ -64,7 +62,7 @@ class EditProfileCubit extends Cubit<EditProfileState> {
         print("valueMap : $val");
         if (companyResponse!.data!.companyId != null) {
           this.company = companyResponse!.data!;
-          imageFile = company.image;
+          imageFile = this.company!.image;
           emit(UpdatedSuccessfullyState());
         } else
           emit(UpdatedFailedState());
