@@ -51,7 +51,7 @@ class EditProfileController {
       final imageTemp = File(image.path);
       return imageTemp;
     } on PlatformException catch (e) {
-      print('Failed to pick image: $e');
+      debugPrint('Failed to pick image: $e');
       return null;
     }
   }

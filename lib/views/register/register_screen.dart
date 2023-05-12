@@ -82,7 +82,8 @@ class RegisterScreen extends StatelessWidget {
                     Text("Location"),
                     IconButton(
                         onPressed: () async {
-                          await registerController.getCurrentPosition(context);
+                          //TODO:: add navigator to map screen
+                          // await registerController.getCurrentPosition(context);
                         },
                         icon: Icon(
                           Icons.location_on,

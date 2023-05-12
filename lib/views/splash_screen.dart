@@ -3,6 +3,7 @@ import 'package:authentication_app/bloc/auth_cubit/auth_cubit.dart';
 import 'package:authentication_app/bloc/edit_profile_cubit/edit_profile_cubit.dart';
 import 'package:authentication_app/models/company.dart';
 import 'package:authentication_app/views/edit_profile/edit_profile.dart';
+import 'package:authentication_app/views/map_screen.dart';
 import 'package:authentication_app/views/sign%20in/sign_in.dart';
 import 'package:flutter/material.dart';
 
@@ -45,23 +46,26 @@ class _SplashScreenState extends State<SplashScreen> {
 
   startTime() async {
     var duration = const Duration(seconds: 10);
-    return Timer(duration, route);
+    return Timer(duration, await route);
   }
 
-  route() {
-    Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) {
-      if (SharedPreferencesHelper.getData(key: "isFirst") != null) {
-        if (SharedPreferencesHelper.getData(key: "email") != null) {
-          Company? company = Company(
-              email: SharedPreferencesHelper.getData(key: "email"),
-              password: SharedPreferencesHelper.getData(key: "email"));
-          AuthCubit authCubit = AuthCubit.get(context);
-          authCubit.signIn(company);
-          company = authCubit.company;
-          return (company != null) ? EditProfile(company) : SignInScreen();
-        }
+  route() async {
+    var screen;
+    if (SharedPreferencesHelper.getData(key: "isFirst") != null) {
+      if (SharedPreferencesHelper.getData(key: "email") != null) {
+        Company? company = Company(
+            email: SharedPreferencesHelper.getData(key: "email"),
+            password: SharedPreferencesHelper.getData(key: "email"));
+        AuthCubit authCubit = AuthCubit.get(context);
+        await authCubit.signIn(company);
+        company = authCubit.company;
+        screen = (company != null) ? EditProfile(company) : SignInScreen();
       }
-      return OnBoardingScreen();
+      screen = SignInScreen();
+    } else
+      screen = OnBoardingScreen();
+    Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) {
+      return screen;
     }), (route) => true);
   }
 }

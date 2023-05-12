@@ -1,10 +1,11 @@
+import 'dart:io';
+
 class CompanyResponse {
   Company? data;
 
   CompanyResponse({this.data});
 
   CompanyResponse.fromJson(Map<String, dynamic> json) {
-    print("data1");
     data = json['data'] != null ? new Company.fromJson(json['data']) : null;
   }
 
@@ -27,7 +28,7 @@ class Company {
   String? contactPhone;
   String? address;
   String? size;
-  String? image;
+  File? image;
   String? lat;
   String? lon;
   List<String>? industries;
@@ -49,7 +50,6 @@ class Company {
   });
 
   Company.fromJson(Map<String, dynamic> json) {
-    print("data2");
     companyId = json['companyId'];
     locationId = json['locationId'];
     name = json['name'];
@@ -59,7 +59,7 @@ class Company {
     contactPhone = json['contactPhone'];
     address = json['address'];
     size = json['size'];
-    image = json['image'];
+    image = (json['image'] != null) ? File(json['image']) : null;
     lat = json['lat'];
     lon = json['lon'];
     if (json['industries'] != null) {
@@ -81,7 +81,6 @@ class Company {
     data['contactPhone'] = this.contactPhone;
     data['address'] = this.address;
     data['size'] = this.size;
-    data['image'] = this.image;
     data['lat'] = this.lat;
     data['lon'] = this.lon;
     if (this.industries != null) {

@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:authentication_app/bloc/auth_cubit/auth_cubit.dart';
+import 'package:authentication_app/bloc/industry_cubit/industry_cubit.dart';
 import 'package:authentication_app/views/edit_profile/edit_profile_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -13,6 +14,7 @@ import '../../core/style/app_colors/app_colors.dart';
 import '../../core/style/app_text_style/app_textstyle.dart';
 import '../../models/checkbox_model.dart';
 import '../../models/company.dart';
+import '../map_screen.dart';
 import 'change_password_screen.dart';
 import '../register/register_controller.dart';
 
@@ -21,12 +23,16 @@ import '../register/register_controller.dart';
 //01121108555
 //so@gmail.com
 //Mm@ssshbzn521
+
+//D://FCAI/Flutter course/180 course/tasks/authentication_app/assets/images/9b5108c1-5f27-46f9-809e-bb290f14454d47980401870310844.jpg
+//D:\FCAI\Flutter course\180 course\tasks\authentication_app\assets\images\9b5108c1-5f27-46f9-809e-bb290f14454d47980401870310844.jpg
 class EditProfile extends StatelessWidget {
   RegisterController registerController = RegisterController();
   Company company;
   PickedFile? _imageFile;
   EditProfile(this.company, {Key? key}) : super(key: key) {
-    debugPrint("recieved data :: ${company.toJson()}");
+    debugPrint(
+        "recieved data :: ${company.toJson()} , image: ${company.image!.path}");
     registerController.companyName.text = (company.name) ?? "";
     registerController.companyAddress.text = (company.address) ?? "";
     registerController.email.text = (company.email) ?? "";
@@ -38,7 +44,8 @@ class EditProfile extends StatelessWidget {
   Widget build(BuildContext context) {
     double constraintsHight = MediaQuery.of(context).size.height;
     EditProfileCubit editProfileCubit = EditProfileCubit.get(context);
-    editProfileCubit.getIndustries();
+    IndustryCubit industryCubit = IndustryCubit.get(context);
+    industryCubit.getIndustries();
     return Scaffold(
       appBar: AppBar(
           actions: [
@@ -76,14 +83,20 @@ class EditProfile extends StatelessWidget {
                       BlocConsumer<EditProfileCubit, EditProfileState>(
                         listener: (context, state) {},
                         builder: (context, state) {
+                          debugPrint(
+                              "file len = ${company.image!.path} , state : ${editProfileCubit.state}");
                           return CircleAvatar(
                               radius: 60,
                               backgroundColor: AppColors.primaryColor,
-                              child: (editProfileCubit.imageFile != null)
+                              child: (company.image != null)
                                   ? CircleAvatar(
                                       radius: 58,
-                                      backgroundImage: FileImage(File(
-                                          editProfileCubit.imageFile.path)),
+                                      //company .image!.path.replaceAll("\\", "/")
+                                      // backgroundImage:
+                                      //     FileImage(File(company.image!.path)),
+                                      child: Image(
+                                          image:
+                                              AssetImage(company.image!.path)),
                                     )
                                   : const Icon(Icons.apartment,
                                       size: 70, color: Colors.white));
@@ -104,21 +117,22 @@ class EditProfile extends StatelessWidget {
                             PopupMenuItem(
                               child: Text("From camera"),
                               onTap: () async {
-                                final image =
+                                company.image =
                                     await EditProfileController.pickImage(
                                         ImageSource.camera);
-                                if (image != null)
-                                  editProfileCubit.uploadImage(image, company);
+                                if (company.image != null)
+                                  await editProfileCubit.editProfile(company);
                               },
                             ),
                             PopupMenuItem(
                               child: Text("From gallery"),
                               onTap: () async {
-                                final image =
+                                company.image =
                                     await EditProfileController.pickImage(
                                         ImageSource.gallery);
-                                if (image != null)
-                                  editProfileCubit.uploadImage(image, company);
+                                if (company.image != null)
+                                  await editProfileCubit.editProfile(company);
+                                company = editProfileCubit.company!;
                               },
                             ),
                           ],
@@ -147,7 +161,21 @@ class EditProfile extends StatelessWidget {
                     Text("Update Location"),
                     IconButton(
                         onPressed: () async {
-                          await registerController.getCurrentPosition(context);
+                          // await registerController.getCurrentPosition(context);
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      MapScreen(company, (comp) async {
+                                        await EditProfileCubit.get(context)
+                                            .editProfile(comp);
+                                        Navigator.pushAndRemoveUntil(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    EditProfile(comp)),
+                                            (route) => false);
+                                      })));
                         },
                         icon: Icon(
                           Icons.location_on,
@@ -178,16 +206,16 @@ class EditProfile extends StatelessWidget {
                   "Company Industry",
                   style: AppTextStyle.labelTextStyle(11),
                 ),
-                BlocConsumer<EditProfileCubit, EditProfileState>(
+                BlocConsumer<IndustryCubit, IndustryState>(
                     listener: (context, state) {},
                     builder: (context, snapshot) {
                       return BlocConsumer<CheckBoxCubit, CheckBoxState>(
                           builder: (context, state) {
-                            return (editProfileCubit.state
+                            return (industryCubit.state
                                     is GetingIndustriesSuccessfullyState)
                                 ? CustomCheckBox(
                                     CheckBoxModel(
-                                        editProfileCubit.industries.choices),
+                                        industryCubit.industries.choices),
                                     isMulti: true,
                                   )
                                 : Container();
@@ -208,9 +236,9 @@ class EditProfile extends StatelessWidget {
                     onPressed: () async {
                       if (registerController.formKey.currentState!.validate()) {
                         List<String> industries = [];
-                        editProfileCubit.industries.selected.forEach((element) {
-                          industries.add(
-                              editProfileCubit.industries.choices[element]);
+                        industryCubit.industries.selected.forEach((element) {
+                          industries
+                              .add(industryCubit.industries.choices[element]);
                         });
                         company = Company(
                             companyId: company.companyId,
@@ -228,7 +256,7 @@ class EditProfile extends StatelessWidget {
                             lat: registerController.lat,
                             lon: registerController.lon,
                             password: company.password);
-                        await editProfileCubit.updateCompany(company);
+                        await editProfileCubit.editProfile(company);
                         if (editProfileCubit.state
                             is UpdatedSuccessfullyState) {
                           company = editProfileCubit.company!;
@@ -242,7 +270,7 @@ class EditProfile extends StatelessWidget {
                           ScaffoldMessenger.of(context).showSnackBar(snackBar);
                         }
                       }
-                      editProfileCubit.getIndustries();
+                      industryCubit.getIndustries();
                       debugPrint("email : ${registerController.email.text}");
                     },
                     child: const Text("Save"),

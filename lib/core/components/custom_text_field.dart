@@ -69,7 +69,6 @@ class CustomTextField extends StatelessWidget {
               border: OutlineInputBorder(),
             ),
             validator: (value) {
-              print("validator ${validator(value)}");
               return validator(value);
             },
           ),

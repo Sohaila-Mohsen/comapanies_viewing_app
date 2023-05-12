@@ -13,8 +13,4 @@ class UpdatedSuccessfullyState extends EditProfileState {}
 
 class UpdatedFailedState extends EditProfileState {}
 
-class GetingIndustriesSuccessfullyState extends EditProfileState {}
 
-class GetingIndustriesFailedState extends EditProfileState {}
-
-class GetingIndustriesLoadingState extends EditProfileState {}

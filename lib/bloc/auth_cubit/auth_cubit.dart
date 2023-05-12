@@ -47,7 +47,6 @@ class AuthCubit extends Cubit<AuthState> {
 //clams@gmail.com
 //12345645
   Future<void> signIn(Company company) async {
-    print(company.toJson());
     emit(LoginLoadingState());
     await DioHelper.postData(
             url: "http://10.0.2.2:8080/mobiletask/auth/login.php",
@@ -57,6 +56,7 @@ class AuthCubit extends Cubit<AuthState> {
       companyResponse = CompanyResponse.fromJson(val);
       if (companyResponse!.data!.contactName != null) {
         this.company = companyResponse!.data;
+        
         emit(LogedinSuccessfullyState());
       }
     }).onError((error, stackTrace) {
