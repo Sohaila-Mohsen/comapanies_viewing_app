@@ -1,5 +1,5 @@
 import 'dart:io';
-import 'package:authentication_app/bloc/auth_cubit/auth_cubit.dart';
+
 import 'package:authentication_app/bloc/industry_cubit/industry_cubit.dart';
 import 'package:authentication_app/views/edit_profile/edit_profile_controller.dart';
 import 'package:flutter/material.dart';
@@ -18,34 +18,35 @@ import '../map_screen.dart';
 import 'change_password_screen.dart';
 import '../register/register_controller.dart';
 
-//sohaila
-//so
-//01121108555
-//so@gmail.com
-//Mm@ssshbzn521
 
-//D://FCAI/Flutter course/180 course/tasks/authentication_app/assets/images/9b5108c1-5f27-46f9-809e-bb290f14454d47980401870310844.jpg
-//D:\FCAI\Flutter course\180 course\tasks\authentication_app\assets\images\9b5108c1-5f27-46f9-809e-bb290f14454d47980401870310844.jpg
 class EditProfile extends StatelessWidget {
   RegisterController registerController = RegisterController();
+  IndustryCubit industryCubit = IndustryCubit();
   Company company;
   PickedFile? _imageFile;
   EditProfile(this.company, {Key? key}) : super(key: key) {
     debugPrint(
-        "recieved data :: ${company.toJson()} , image: ${company.image!.path}");
+        "recieved data :: ${company.toJson()} , image: ${(company.image) ?? ""}");
     registerController.companyName.text = (company.name) ?? "";
     registerController.companyAddress.text = (company.address) ?? "";
     registerController.email.text = (company.email) ?? "";
     registerController.name.text = (company.contactName) ?? "";
     registerController.phone.text = (company.contactPhone) ?? "";
+    if (company.industries != null)
+      industryCubit.setSelected(company.industries!);
+    if (industryCubit.industries.selected.length > 0)
+      debugPrint(
+          "selected industries = ${(industryCubit.industries.selected[0])}");
+    debugPrint("Done edit screen constractor ..");
   }
 
   @override
   Widget build(BuildContext context) {
+    industryCubit = IndustryCubit.get(context);
+    debugPrint(" edit screen start building..");
     double constraintsHight = MediaQuery.of(context).size.height;
     EditProfileCubit editProfileCubit = EditProfileCubit.get(context);
-    IndustryCubit industryCubit = IndustryCubit.get(context);
-    industryCubit.getIndustries();
+    //industryCubit.getIndustries();
     return Scaffold(
       appBar: AppBar(
           actions: [
@@ -81,22 +82,23 @@ class EditProfile extends StatelessWidget {
                   child: Stack(
                     children: [
                       BlocConsumer<EditProfileCubit, EditProfileState>(
-                        listener: (context, state) {},
+                        listener: (context, state) {
+                          debugPrint("listened to state : $state");
+                        },
                         builder: (context, state) {
-                          debugPrint(
-                              "file len = ${company.image!.path} , state : ${editProfileCubit.state}");
+                          /*state : ${editProfileCubit.state}*/
+                          //debugPrint("file len = ${company.image!.path} , ");
                           return CircleAvatar(
                               radius: 60,
                               backgroundColor: AppColors.primaryColor,
                               child: (company.image != null)
                                   ? CircleAvatar(
                                       radius: 58,
-                                      //company .image!.path.replaceAll("\\", "/")
-                                      // backgroundImage:
-                                      //     FileImage(File(company.image!.path)),
-                                      child: Image(
-                                          image:
-                                              AssetImage(company.image!.path)),
+                                      backgroundImage: (company.image!.path
+                                              .contains('assets'))
+                                          ? AssetImage(company.image!.path)
+                                          : FileImage(File(company.image!.path))
+                                              as ImageProvider,
                                     )
                                   : const Icon(Icons.apartment,
                                       size: 70, color: Colors.white));
@@ -121,7 +123,7 @@ class EditProfile extends StatelessWidget {
                                     await EditProfileController.pickImage(
                                         ImageSource.camera);
                                 if (company.image != null)
-                                  await editProfileCubit.editProfile(company);
+                                  await editProfileCubit.uploadPhoto(company);
                               },
                             ),
                             PopupMenuItem(
@@ -131,7 +133,7 @@ class EditProfile extends StatelessWidget {
                                     await EditProfileController.pickImage(
                                         ImageSource.gallery);
                                 if (company.image != null)
-                                  await editProfileCubit.editProfile(company);
+                                  await editProfileCubit.uploadPhoto(company);
                                 company = editProfileCubit.company!;
                               },
                             ),
@@ -211,11 +213,13 @@ class EditProfile extends StatelessWidget {
                     builder: (context, snapshot) {
                       return BlocConsumer<CheckBoxCubit, CheckBoxState>(
                           builder: (context, state) {
+                            if (industryCubit.industries.selected.length > 0)
+                              debugPrint(
+                                  "selected industries = ${(industryCubit.industries.selected[0])}");
                             return (industryCubit.state
                                     is GetingIndustriesSuccessfullyState)
                                 ? CustomCheckBox(
-                                    CheckBoxModel(
-                                        industryCubit.industries.choices),
+                                    industryCubit.industries,
                                     isMulti: true,
                                   )
                                 : Container();

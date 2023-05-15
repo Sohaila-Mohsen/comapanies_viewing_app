@@ -101,5 +101,16 @@ class RegisterController {
     return true;
   }
 
-
+  Future<void> getCurrentPosition(context) async {
+    final hasPermission = await _handleLocationPermission(context);
+    if (!hasPermission) return;
+    await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high)
+        .then((Position position) {
+      print("position : ${position.latitude}");
+      lat = position.latitude.toString();
+      lon = position.longitude.toString();
+    }).catchError((e) {
+      debugPrint("errror: $e");
+    });
+  }
 }

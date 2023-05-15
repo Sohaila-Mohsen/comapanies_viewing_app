@@ -18,17 +18,7 @@ class RegisterScreen extends StatelessWidget {
 
   RegisterScreen({Key? key}) : super(key: key);
 
-  // Future<Position?> _getCurrentLocation() async {
-  //   bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
-  //   if (!serviceEnabled) {
-  //     return Future.error("Location services is disabeled");
-  //   }
-  //   LocationPermission permission = await Geolocator.checkPermission();
-  //   if (permission == LocationPermission.denied)
-  //     permission = await Geolocator.requestPermission();
-  //   if (permission == LocationPermission.denied)
-  //     return Future.error("Permission denied");
-  // }
+  
 
   @override
   Widget build(BuildContext context) {
@@ -83,7 +73,7 @@ class RegisterScreen extends StatelessWidget {
                     IconButton(
                         onPressed: () async {
                           //TODO:: add navigator to map screen
-                          // await registerController.getCurrentPosition(context);
+                          await registerController.getCurrentPosition(context);
                         },
                         icon: Icon(
                           Icons.location_on,

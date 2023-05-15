@@ -16,6 +16,15 @@ class IndustryCubit extends Cubit<IndustryState> {
   static IndustryCubit get(context) => BlocProvider.of(context);
   IndustriesResponse? industriesResponse;
   CheckBoxModel industries = CheckBoxModel([]);
+
+  void setSelected(List<String> selected) {
+    if (industries.choices.isNotEmpty) {
+      selected.forEach((element) {
+        industries.selected.add(industries.choices.indexOf(element));
+      });
+    }
+  }
+
   Future<void> getIndustries() async {
     emit(GetingIndustriesLoadingState());
     await DioHelper.getData(

@@ -11,4 +11,6 @@ class MapCubit extends Cubit<MapState> {
   late LatLng _defaultLatLng;
   late LatLng _draggedLatlng;
   String _draggedAddress = "";
+
+  
 }

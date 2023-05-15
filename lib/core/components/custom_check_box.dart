@@ -23,6 +23,7 @@ class CustomCheckBox extends StatelessWidget {
                   leading: Checkbox(
                       onChanged: (value) {
                         if (isMulti) {
+                          print("from checkbox.. ${values.selected.length}");
                           checkBoxCubit.addValue(values, index);
                         } else {
                           checkBoxCubit.changeValue(values, index);

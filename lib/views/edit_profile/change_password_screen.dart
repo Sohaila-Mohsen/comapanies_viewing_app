@@ -1,12 +1,12 @@
+import 'package:authentication_app/bloc/edit_profile_cubit/edit_profile_cubit.dart';
 import 'package:authentication_app/core/style/app_text_style/app_textstyle.dart';
 import 'package:authentication_app/models/company.dart';
 import 'package:flutter/material.dart';
-
 import '../../core/components/custom_text_field.dart';
 import 'edit_profile_controller.dart';
 
 class ChangePasswordScreen extends StatelessWidget {
-  final Company company;
+  Company company;
   final EditProfileController editProfileController = EditProfileController();
   ChangePasswordScreen(this.company, {Key? key}) : super(key: key);
 
@@ -57,6 +57,15 @@ class ChangePasswordScreen extends StatelessWidget {
                           .validate()) {
                         if (editProfileController.password.text ==
                             company.password) {
+                          print("before :${company.toJson()}");
+                          EditProfileCubit editProfileCubit =
+                              EditProfileCubit.get(context);
+                          company.password =
+                              editProfileController.newPasssword.text;
+                          editProfileCubit.editProfile(company).then((value) {
+                            if (editProfileCubit.company != null)
+                              company = editProfileCubit.company!;
+                          });
                           const snackBar = SnackBar(
                               content: Text("Password changed successfully !"));
                           ScaffoldMessenger.of(context).showSnackBar(snackBar);

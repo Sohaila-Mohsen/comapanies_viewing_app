@@ -22,12 +22,15 @@ class AuthCubit extends Cubit<AuthState> {
 
   Future<void> register(Company user) async {
     emit(RegisterLoadingState());
+    debugPrint("sent data ${user.toJson()}");
     await DioHelper.postData(
             url: "http://10.0.2.2:8080/mobiletask/auth/signup.php",
             data: user.toJson())
         .then((value) {
+      debugPrint("regester response : $value");
       Map<String, dynamic> val = json.decode(value.data);
       companyResponse = CompanyResponse.fromJson(val);
+
       if (companyResponse!.data!.contactName != null) {
         company = companyResponse!.data;
         SharedPreferencesHelper.saveData(
@@ -52,11 +55,14 @@ class AuthCubit extends Cubit<AuthState> {
             url: "http://10.0.2.2:8080/mobiletask/auth/login.php",
             data: company.toJson())
         .then((value) {
+      debugPrint("${value}");
       Map<String, dynamic> val = json.decode(value.data);
+
       companyResponse = CompanyResponse.fromJson(val);
+      print("Sign in success");
       if (companyResponse!.data!.contactName != null) {
         this.company = companyResponse!.data;
-        
+        print("Sign in success");
         emit(LogedinSuccessfullyState());
       }
     }).onError((error, stackTrace) {

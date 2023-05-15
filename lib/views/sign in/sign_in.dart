@@ -58,18 +58,6 @@ class SignInScreen extends StatelessWidget {
                 const SizedBox(
                   height: 20,
                 ),
-                BlocListener<AuthCubit, AuthState>(
-                  listener: (context, state) {
-                    if (state is RegisterSuccessState ||
-                        state is RegisterErrorState) {
-                      // Fluttertoast.showToast(
-                      //     msg: authCubit.userResponse!.message!,
-                      //     gravity: ToastGravity.BOTTOM);
-                      debugPrint("SUCCESS");
-                    }
-                  },
-                  child: Container(),
-                ),
                 BlocConsumer<AuthCubit, AuthState>(
                     listener: (context, state) {},
                     builder: (context, snapshot) {
@@ -85,12 +73,22 @@ class SignInScreen extends StatelessWidget {
                             company = authCubit.company;
                             print(authCubit.state);
                             if (authCubit.state is LogedinSuccessfullyState) {
+                              const snackBar = SnackBar(
+                                  content: Text("Loged in successfully !"));
+                              ScaffoldMessenger.of(context)
+                                  .showSnackBar(snackBar);
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) =>
                                         EditProfile(company!)),
                               );
+                            } else {
+                              const snackBar = SnackBar(
+                                  content:
+                                      Text("Something went wrong try again !"));
+                              ScaffoldMessenger.of(context)
+                                  .showSnackBar(snackBar);
                             }
                             //_getCurrentLocation();
                           }

@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:authentication_app/bloc/auth_cubit/auth_cubit.dart';
 import 'package:authentication_app/bloc/edit_profile_cubit/edit_profile_cubit.dart';
+import 'package:authentication_app/bloc/industry_cubit/industry_cubit.dart';
 import 'package:authentication_app/models/company.dart';
 import 'package:authentication_app/views/edit_profile/edit_profile.dart';
 import 'package:authentication_app/views/map_screen.dart';
@@ -26,6 +27,8 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   Widget build(BuildContext context) {
+    IndustryCubit industryCubit = IndustryCubit.get(context);
+    industryCubit.getIndustries();
     return Scaffold(
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,

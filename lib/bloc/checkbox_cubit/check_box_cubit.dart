@@ -11,6 +11,7 @@ class CheckBoxCubit extends Cubit<CheckBoxState> {
   //List<int> values = [];
 
   addValue(CheckBoxModel values, int value) {
+    print("from cubit values len ${values.selected.length} , value = $value");
     if (values.selected.contains(value)) {
       values.selected.remove(value);
     } else

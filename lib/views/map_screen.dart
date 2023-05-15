@@ -1,6 +1,4 @@
 import 'dart:async';
-
-import 'package:authentication_app/core/style/app_colors/app_colors.dart';
 import 'package:authentication_app/models/company.dart';
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
@@ -136,9 +134,7 @@ class _MapScreenState extends State<MapScreen> {
     Placemark address = placemarks[0]; // get only first and closest address
     String addresStr =
         "${address.street}, ${address.locality}, ${address.administrativeArea}, ${address.country}";
-    setState(() {
-      _draggedAddress = addresStr;
-    });
+    _draggedAddress = addresStr;
   }
 
   // //get user's current location and set the map's camera to that location
