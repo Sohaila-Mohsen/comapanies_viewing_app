@@ -131,3 +131,14 @@ class Industries {
     return data;
   }
 }
+
+List<Company> companies = [
+  Company(
+      name: "Google",
+      address: "England",
+      lat: "12.125",
+      lon: "25.36",
+      image: File(
+          "assets/images/cc1424ac-dcdb-41fc-b18a-297dc4a38c965626872660049788668.jpg"),
+      contactPhone: "01121108555")
+];

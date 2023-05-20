@@ -16,10 +16,18 @@ class DioHelper {
   static Future<Response> getData(
       {required String url, Map<String, dynamic>? query, String? token}) async {
     if (token != null) dio.options.headers["Authorization"] = "Bearer $token";
-    return await dio.get(url,
-        queryParameters: query,
-        options:
-            Options(receiveTimeout: const Duration(milliseconds: 60 * 100)));
+    return await dio
+        .get(url,
+            queryParameters: query,
+            options: Options(
+                receiveDataWhenStatusError: true,
+                receiveTimeout: const Duration(milliseconds: 60 * 100)))
+        .then((value) {
+      debugPrint("from dio : $value");
+      return value;
+    }).catchError((error, stackTrace) {
+      debugPrint("error from dio : $error");
+    });
   }
 
   static Future<Response> postData(

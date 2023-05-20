@@ -72,7 +72,7 @@ class RegisterController {
     return null;
   }
 
-  Future<bool> _handleLocationPermission(context) async {
+  static Future<bool> _handleLocationPermission(context) async {
     bool serviceEnabled;
     LocationPermission permission;
 
@@ -111,6 +111,17 @@ class RegisterController {
       lon = position.longitude.toString();
     }).catchError((e) {
       debugPrint("errror: $e");
+    });
+  }
+
+  static Future<Position?> getCurrentLocation(context) async {
+    final hasPermission = await _handleLocationPermission(context);
+    if (!hasPermission) return null;
+    await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high)
+        .then((Position position) {
+      return position;
+    }).catchError((e) {
+      debugPrint("get current position error");
     });
   }
 }

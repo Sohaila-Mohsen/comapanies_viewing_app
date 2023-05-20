@@ -38,7 +38,6 @@ class _MapScreenState extends State<MapScreen> {
     _cameraPosition =
         CameraPosition(target: _defaultLatLng, zoom: 17.5 // number of map view
             );
-
     //map will redirect to my current location when loaded
     _gotoUserCurrentPosition();
   }

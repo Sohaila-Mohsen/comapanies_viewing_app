@@ -18,7 +18,6 @@ import '../map_screen.dart';
 import 'change_password_screen.dart';
 import '../register/register_controller.dart';
 
-
 class EditProfile extends StatelessWidget {
   RegisterController registerController = RegisterController();
   IndustryCubit industryCubit = IndustryCubit();
@@ -91,16 +90,16 @@ class EditProfile extends StatelessWidget {
                           return CircleAvatar(
                               radius: 60,
                               backgroundColor: AppColors.primaryColor,
-                              child: (company.image != null)
-                                  ? CircleAvatar(
-                                      radius: 58,
-                                      backgroundImage: (company.image!.path
-                                              .contains('assets'))
-                                          ? AssetImage(company.image!.path)
-                                          : FileImage(File(company.image!.path))
-                                              as ImageProvider,
-                                    )
-                                  : const Icon(Icons.apartment,
+                              child: //(company.image != null)
+                                  // ? CircleAvatar(
+                                  //     radius: 58,
+                                  //     backgroundImage: (company.image!.path
+                                  //             .contains('assets'))
+                                  //         ? AssetImage(company.image!.path)
+                                  //         : FileImage(File(company.image!.path))
+                                  //             as ImageProvider,
+                                  //   ):
+                                  const Icon(Icons.apartment,
                                       size: 70, color: Colors.white));
                         },
                       ),

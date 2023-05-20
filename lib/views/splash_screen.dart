@@ -5,6 +5,7 @@ import 'package:authentication_app/bloc/industry_cubit/industry_cubit.dart';
 import 'package:authentication_app/models/company.dart';
 import 'package:authentication_app/views/edit_profile/edit_profile.dart';
 import 'package:authentication_app/views/map_screen.dart';
+import 'package:authentication_app/views/services_screen.dart';
 import 'package:authentication_app/views/sign%20in/sign_in.dart';
 import 'package:flutter/material.dart';
 
@@ -62,7 +63,7 @@ class _SplashScreenState extends State<SplashScreen> {
         AuthCubit authCubit = AuthCubit.get(context);
         await authCubit.signIn(company);
         company = authCubit.company;
-        screen = (company != null) ? EditProfile(company) : SignInScreen();
+        screen = (company != null) ? ServicesScreen(company) : SignInScreen();
       }
       screen = SignInScreen();
     } else

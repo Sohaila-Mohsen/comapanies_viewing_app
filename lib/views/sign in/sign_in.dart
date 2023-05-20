@@ -1,3 +1,4 @@
+import 'package:authentication_app/bloc/services_cubit/services_cubit.dart';
 import 'package:authentication_app/views/register/register_screen.dart';
 import 'package:authentication_app/views/sign%20in/signIn_controller.dart';
 import 'package:flutter/material.dart';
@@ -7,6 +8,7 @@ import '../../core/components/custom_text_field.dart';
 import '../../core/style/app_text_style/app_textstyle.dart';
 import '../../models/company.dart';
 import '../edit_profile/edit_profile.dart';
+import '../services_screen.dart';
 
 class SignInScreen extends StatelessWidget {
   SignInScreen({Key? key}) : super(key: key);
@@ -77,11 +79,13 @@ class SignInScreen extends StatelessWidget {
                                   content: Text("Loged in successfully !"));
                               ScaffoldMessenger.of(context)
                                   .showSnackBar(snackBar);
-                              Navigator.push(
+                              await ServicesCubit.get(context).getservises();
+                              Navigator.pushAndRemoveUntil(
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) =>
-                                        EditProfile(company!)),
+                                        ServicesScreen(company!)),
+                                (route) => false,
                               );
                             } else {
                               const snackBar = SnackBar(
